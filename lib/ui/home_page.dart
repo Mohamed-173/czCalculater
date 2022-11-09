@@ -1,12 +1,15 @@
 import 'package:czcalculator/constant/const.dart';
+import 'package:czcalculator/controllers/calculator_controller.dart';
 import 'package:czcalculator/toolbox/toolbox.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    CalculatorController controller = Get.put(CalculatorController());
     // sumPrice();
     return Scaffold(
       appBar: appBar(),
@@ -22,12 +25,15 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  topTitle(
-                    texttitle: "Total Prices",
-                    textcontent: "IQD 2,500,000",
-                    function: sumPrice,
-                    context: context,
-                  ),
+                  GetBuilder<CalculatorController>(
+                      builder: (calculatorController) {
+                    return topTitle(
+                      texttitle: "Total Prices",
+                      textcontent: "IQD  ${controller.totalPrice}",
+                      // function: sumPrice,
+                      context: context,
+                    );
+                  }),
                   topTitle(
                     texttitle: "Total Prices",
                     textcontent: "2500000",
