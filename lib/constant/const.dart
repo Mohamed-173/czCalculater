@@ -87,8 +87,8 @@ List<Map<String, dynamic>> calModel = [
     "type": false,
   },
 ];
-var tmp = calModel;
-void sor() {
+// var tmp = calModel;
+// void sor() {
   //  tmp = calModel.sort((a, b) {
   //   var adate = a['date']; //before -> var adate = a.expiry;
   //   var bdate = b['date']; //var bdate = b.expiry;
@@ -96,28 +96,28 @@ void sor() {
   // });
   // tmp = calModel as List<Map<String, dynamic>>;
 
-  tmp.sort((a, b) {
-    var adate = a['price']; //before -> var adate = a.expiry;
-    var bdate = b['price']; //var bdate = b.expiry;
-    return -adate.compareTo(bdate);
-  });
-  for (final i in tmp) {
-    print(i["price"]);
-  }
-}
+  // tmp.sort((a, b) {
+  //   var adate = a['price']; //before -> var adate = a.expiry;
+  //   var bdate = b['price']; //var bdate = b.expiry;
+  //   return -adate.compareTo(bdate);
+  // });
+//   for (final i in tmp) {
+//     print(i["price"]);
+//   }
+// }
 
-List<int> totalPrices = [];
-int sumer = 0;
+// List<int> totalPrices = [];
+// int sumer = 0;
 
-void sumPrice() {
-  for (final i in tmp) {
-    if (i["type"] == false) {
-      totalPrices.add(i["price"]);
-    }
-  }
-  print(totalPrices);
-  for (int x = 0; x < totalPrices.length; x++) {
-    sumer = sumer + totalPrices[x];
-  }
-  print(sumer);
-}
+// // void sumPrice() {
+// //   for (final i in tmp) {
+// //     if (i["type"] == false) {
+// //       totalPrices.add(i["price"]);
+// //     }
+// //   }
+//   print(totalPrices);
+//   for (int x = 0; x < totalPrices.length; x++) {
+//     sumer = sumer + totalPrices[x];
+//   }
+//   print(sumer);
+// }
