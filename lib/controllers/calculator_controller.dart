@@ -36,6 +36,9 @@ class CalculatorController extends GetxController {
 //
   TextEditingController _typeController = TextEditingController();
   TextEditingController get typeController => _typeController;
+  // true false for switch for variable
+  RxBool get onChangetype => _onChangetype;
+  RxBool _onChangetype = false.obs;
 
 //
   var selectedDate = DateTime.now().obs;
@@ -88,6 +91,12 @@ class CalculatorController extends GetxController {
     update();
   }
 
+  void onSwitch(bool value) {
+    print(value);
+
+    _onChangetype.value = !_onChangetype.value;
+  }
+
   void sumTotalPayBack(List<Map<String, dynamic>> total) {
     /// we reset the number because its have it and be error if not reset it
     _totalPricePayBack = 0;
@@ -138,7 +147,7 @@ class CalculatorController extends GetxController {
         "price": price,
         "receipt": receipt,
         "date": selectdate,
-        "type": type,
+        "type": onChangetype,
       };
     } else {
       t = {
@@ -151,8 +160,8 @@ class CalculatorController extends GetxController {
     }
     print(t);
     _tmp.add(t);
-    // print(tmp);
     update();
+    // print(tmp);
   }
 
   void chooseDate(BuildContext context) async {

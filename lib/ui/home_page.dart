@@ -82,187 +82,190 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     var col = Colors.cyanAccent.shade400;
                     var bCol = Colors.white;
-                    if (controller.tmp[index]["type"]) {
+                    if (controller.tmp[index]["type"] == true) {
                       // col = Colors.red.shade100;
                       bCol = Colors.red.shade100;
                     } else {}
 
-                    return GestureDetector(
-                      onLongPress: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Removing"),
-                                content: SizedBox(
-                                  height: getHeight(context, 25),
-                                  // width: Get.width.toPrecision(90),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                          "We Removing the receipt  ID: ${controller.tmp[index]["id"]}  do you realy want it? \n"),
-                                      Row(
-                                        children: const [
-                                          Text(" if yes then click"),
-                                          Text(
-                                            " OK",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.red),
-                                          ),
-                                          Text("  or else click "),
-                                          Text(
-                                            " Close",
-                                            style:
-                                                TextStyle(color: Colors.blue),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                    return Container(
+                      height: getHeight(context, 10),
+                      child: GestureDetector(
+                        onLongPress: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Removing"),
+                                  content: SizedBox(
+                                    height: getHeight(context, 25),
+                                    // width: Get.width.toPrecision(90),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                            "We Removing the receipt  ID: ${controller.tmp[index]["id"]}  do you realy want it? \n"),
+                                        Row(
+                                          children: const [
+                                            Text(" if yes then click"),
+                                            Text(
+                                              " OK",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red),
+                                            ),
+                                            Text("  or else click "),
+                                            Text(
+                                              " Close",
+                                              style:
+                                                  TextStyle(color: Colors.blue),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      controller.removeAtIndex(index: index);
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        controller.removeAtIndex(index: index);
 
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text(
-                                      "OK",
-                                      style: TextStyle(
-                                        color: Colors.red,
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        "OK",
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Close"),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // verticalDirection: VerticalDirection.down,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: bCol,
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: col,
+                                      ),
+                                      // top: BorderSide(
+                                      //     color: Colors.cyanAccent.shade400),
+                                      left: BorderSide(
+                                        color: col,
                                       ),
                                     ),
                                   ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Close"),
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 0, horizontal: 2),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          // verticalDirection: VerticalDirection.down,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: bCol,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: col,
-                                    ),
-                                    // top: BorderSide(
-                                    //     color: Colors.cyanAccent.shade400),
-                                    left: BorderSide(
-                                      color: col,
+                                  // color: Colors.cyanAccent[400],
+                                  child: FittedBox(
+                                    fit: BoxFit.cover,
+                                    child: Text(
+                                      controller.tmp[index]["id"].toString(),
+                                      style: contentstyle,
                                     ),
                                   ),
                                 ),
-                                // color: Colors.cyanAccent[400],
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: bCol,
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: col,
+                                      ),
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  // color: bCol,
                                   child: Text(
-                                    controller.tmp[index]["id"].toString(),
+                                    controller.NFormatter(
+                                        number: controller.tmp[index]["price"]),
                                     style: contentstyle,
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: bCol,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: col,
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: bCol,
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: col,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                alignment: Alignment.center,
-                                // color: bCol,
-                                child: Text(
-                                  controller.NFormatter(
-                                      number: controller.tmp[index]["price"]),
-                                  style: contentstyle,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: bCol,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: col,
-                                    ),
-                                  ),
-                                ),
-                                alignment: Alignment.center,
-                                // color: bCol,
-                                child: Text(
-                                  controller.tmp[index]["receipt"].toString(),
-                                  style: contentstyle,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: bCol,
-                                  border: Border(
-                                    bottom: BorderSide(color: col),
-                                    // right: BorderSide(
-                                    //   color: Colors.cyanAccent.shade400,
-                                    // ),
-                                  ),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  formatter
-                                      .format(controller.tmp[index]["date"]
-                                          as DateTime)
-                                      .toString(),
-                                  style: contentstyle,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: bCol,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: col,
-                                    ),
-                                    // top: BorderSide(
-                                    //     color: Colors.cyanAccent.shade400),
-                                    right: BorderSide(
-                                      color: col,
-                                    ),
-                                  ),
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center,
+                                  // color: bCol,
                                   child: Text(
-                                    controller.tmp[index]["type"].toString(),
+                                    controller.tmp[index]["receipt"].toString(),
                                     style: contentstyle,
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: bCol,
+                                    border: Border(
+                                      bottom: BorderSide(color: col),
+                                      // right: BorderSide(
+                                      //   color: Colors.cyanAccent.shade400,
+                                      // ),
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    formatter
+                                        .format(controller.tmp[index]["date"]
+                                            as DateTime)
+                                        .toString(),
+                                    style: contentstyle,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: bCol,
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: col,
+                                      ),
+                                      // top: BorderSide(
+                                      //     color: Colors.cyanAccent.shade400),
+                                      right: BorderSide(
+                                        color: col,
+                                      ),
+                                    ),
+                                  ),
+                                  child: FittedBox(
+                                    fit: BoxFit.cover,
+                                    child: Text(
+                                      controller.tmp[index]["type"].toString(),
+                                      style: contentstyle,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -318,11 +321,12 @@ class HomePage extends StatelessWidget {
                               },
                               child: const Text("Choose Date"),
                             ),
-                            TextFormField(
-                              controller: controller.typeController,
-                              decoration: const InputDecoration(
-                                labelText: "type",
-                              ),
+                            Obx(
+                              () => Switch(
+                                  value: controller.onChangetype.value,
+                                  onChanged: (value) {
+                                    controller.onSwitch(value);
+                                  }),
                             ),
                           ],
                         ),
@@ -331,16 +335,20 @@ class HomePage extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             controller.addTemp(
-                              price:
-                                  int.tryParse(controller.priceController.text),
+                              price: int.tryParse(
+                                  controller.priceController.value.text),
                               receipt: int.tryParse(
-                                  controller.receiptController.text),
+                                  controller.receiptController.value.text),
                               selectdate: DateTime.tryParse(
                                   controller.dateController.value.text),
-                              type: controller.typeController.text == "true"
-                                  ? true
-                                  : false,
+                              type:
+                                  controller.typeController.value.text == "true"
+                                      ? true
+                                      : false,
                             );
+                            controller.sumTotalLoan(controller.tmp);
+                            controller.sumTotalPayBack(controller.tmp);
+                            controller.finalTotalPricesLoan();
                           },
                           child: const Text("OK"),
                         ),
