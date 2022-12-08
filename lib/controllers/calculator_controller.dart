@@ -1,8 +1,8 @@
 // import 'dart:js';
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:czcalculator/constant/const.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -20,27 +20,30 @@ class CalculatorController extends GetxController {
   double get finalTotalPriceLoan => _finalTotalPriceLoan;
 
   // just list of every reciept
-  RxList<Map<String, dynamic>> _tmp = RxList<Map<String, dynamic>>();
+  final RxList<Map<String, dynamic>> _tmp = RxList<Map<String, dynamic>>();
   RxList<Map<String, dynamic>> get tmp => _tmp;
   //
-  TextEditingController _priceController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   TextEditingController get priceController => _priceController;
 
   //
-  TextEditingController _receiptController = TextEditingController();
+  final TextEditingController _receiptController = TextEditingController();
   TextEditingController get receiptController => _receiptController;
 
   //
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   TextEditingController get dateController => _dateController;
 //
-  TextEditingController _typeController = TextEditingController();
+  final TextEditingController _typeController = TextEditingController();
   TextEditingController get typeController => _typeController;
   // true false for switch for variable
   RxBool get onChangetype => _onChangetype;
-  RxBool _onChangetype = false.obs;
+  final RxBool _onChangetype = false.obs;
 
 //
+  RxString get selectedDateTimeStringController =>
+      _selectedDateTimeStringController;
+  final RxString _selectedDateTimeStringController = ''.obs;
   var selectedDate = DateTime.now().obs;
 
   //
@@ -69,9 +72,15 @@ class CalculatorController extends GetxController {
     update();
   }
 
-  String NFormatter({int? number}) {
+  String nFormatter({int? number}) {
     NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
     return myFormat.format(number);
+  }
+
+  void commonSum() {
+    finalTotalPricesLoan();
+    sumTotalLoan(_tmp);
+    sumTotalPayBack(_tmp);
   }
 
   void sumTotalLoan(List<Map<String, dynamic>> total) {
@@ -79,7 +88,7 @@ class CalculatorController extends GetxController {
     List<int> tempTotalPrices = [];
 
     for (final i in total) {
-      if (i["type"] == false) {
+      if (i["type"] == "false") {
         tempTotalPrices.add(i["price"]);
       }
     }
@@ -92,8 +101,6 @@ class CalculatorController extends GetxController {
   }
 
   void onSwitch(bool value) {
-    print(value);
-
     _onChangetype.value = !_onChangetype.value;
   }
 
@@ -103,7 +110,7 @@ class CalculatorController extends GetxController {
     List<int> tempTotalPrices = [];
 
     for (final i in total) {
-      if (i["type"] == true) {
+      if (i["type"] == "true") {
         tempTotalPrices.add(i["price"]);
       }
     }
@@ -125,18 +132,25 @@ class CalculatorController extends GetxController {
     _id++;
   }
 
+  void resetTempValues() {
+    priceController.clear();
+    typeController.clear();
+    receiptController.clear();
+    selectedDateTimeStringController.value = '';
+    onChangetype.value = false;
+  }
+
   int tt = 0;
   void addTemp({int? price, int? receipt, DateTime? selectdate, bool? type}) {
-    bool boolRandom = false;
-    tt++;
-    if (tt % 5 == 0) {
-      boolRandom = true;
-    } else {
-      boolRandom = false;
-    }
-    Random random = Random();
+    // bool boolRandom = false;
+    // tt++;
+    // if (tt % 5 == 0) {
+    //   boolRandom = true;
+    // } else {
+    //   boolRandom = false;
+    // }
+
     Map<String, dynamic> t = {};
-    print("$price ,$receipt,$selectdate,$type");
 
     if (price != null &&
         receipt != null &&
@@ -147,24 +161,23 @@ class CalculatorController extends GetxController {
         "price": price,
         "receipt": receipt,
         "date": selectdate,
-        "type": onChangetype,
+        "type": "$onChangetype",
       };
     } else {
-      t = {
-        "id": "${_id++}",
-        "price": random.nextInt(10000000) + 1000,
-        "receipt": random.nextInt(2000),
-        "date": DateTime.now(),
-        "type": boolRandom,
-      };
+      // t = {
+      //   "id": "${_id++}",
+      //   "price": random.nextInt(10000000) + 1000,
+      //   "receipt": random.nextInt(2000),
+      //   "date": DateTime.now(),
+      //   "type": boolRandom,
+      // };
     }
-    print(t);
+
     _tmp.add(t);
     update();
-    // print(tmp);
   }
 
-  void chooseDate(BuildContext context) async {
+  chooseDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate.value,
@@ -184,6 +197,10 @@ class CalculatorController extends GetxController {
     if (pickedDate != null && pickedDate != selectedDate.value) {
       dateController.text = pickedDate.toString();
       selectedDate.value = pickedDate;
+    }
+    if (pickedDate != null) {
+      selectedDateTimeStringController.value =
+          "  ${pickedDate.day}-${pickedDate.month}-${pickedDate.year} ";
     }
   }
 }

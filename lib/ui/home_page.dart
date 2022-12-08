@@ -1,12 +1,17 @@
 import 'package:czcalculator/constant/const.dart';
 import 'package:czcalculator/controllers/calculator_controller.dart';
+import 'package:czcalculator/toolbox/dimensions.dart';
 import 'package:czcalculator/toolbox/toolbox.dart';
+// import 'package:czcalculator/widgets/big_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/small_text.dart';
+
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +54,6 @@ class HomePage extends StatelessWidget {
                           "IQD ${formatter.format(controller.finalTotalPriceLoan)}",
                       context: context,
                     ),
-                    // topTitle(
-                    //   texttitle: "Total Prices",
-                    //   textcontent: "2500000",
-                    //   context: context,
-                    // ),
-                    // topTitle(
-                    //   texttitle: "Total Prices",
-                    //   textcontent: "2500000",
-                    //   context: context,
-                    // ),
                   ],
                 );
               }),
@@ -82,12 +77,12 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     var col = Colors.cyanAccent.shade400;
                     var bCol = Colors.white;
-                    if (controller.tmp[index]["type"] == true) {
+                    if (controller.tmp[index]["type"] == "true") {
                       // col = Colors.red.shade100;
                       bCol = Colors.red.shade100;
                     } else {}
 
-                    return Container(
+                    return SizedBox(
                       height: getHeight(context, 10),
                       child: GestureDetector(
                         onLongPress: () {
@@ -102,23 +97,29 @@ class HomePage extends StatelessWidget {
                                     child: Column(
                                       children: [
                                         Text(
-                                            "We Removing the receipt  ID: ${controller.tmp[index]["id"]}  do you realy want it? \n"),
-                                        Row(
-                                          children: const [
-                                            Text(" if yes then click"),
-                                            Text(
-                                              " OK",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.red),
-                                            ),
-                                            Text("  or else click "),
-                                            Text(
-                                              " Close",
-                                              style:
-                                                  TextStyle(color: Colors.blue),
-                                            ),
-                                          ],
+                                          "We Removing the receipt  ID: ${controller.tmp[index]["id"]}  do you realy want it? \n",
+                                          style: const TextStyle(
+                                            overflow: TextOverflow.clip,
+                                          ),
+                                        ),
+                                        FittedBox(
+                                          child: Row(
+                                            children: const [
+                                              Text(" if yes then click"),
+                                              Text(
+                                                " OK",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.red),
+                                              ),
+                                              Text("  or else click "),
+                                              Text(
+                                                " Close",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -194,7 +195,7 @@ class HomePage extends StatelessWidget {
                                   alignment: Alignment.center,
                                   // color: bCol,
                                   child: Text(
-                                    controller.NFormatter(
+                                    controller.nFormatter(
                                         number: controller.tmp[index]["price"]),
                                     style: contentstyle,
                                   ),
@@ -276,97 +277,115 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            backgroundColor: Colors.cyanAccent.shade400,
-            onPressed: () {
-              controller.addTemp();
-              controller.sumTotalLoan(controller.tmp);
-              controller.sumTotalPayBack(controller.tmp);
-              controller.finalTotalPricesLoan();
-            },
-            child: const Icon(Icons.remove),
-          ),
-          const SizedBox(width: 5),
-          FloatingActionButton(
-            backgroundColor: Colors.cyanAccent.shade400,
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Adding Data"),
-                      content: SizedBox(
-                        height: getHeight(context, 35),
-                        // width: Get.width.toPrecision(90),
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              controller: controller.priceController,
-                              decoration: const InputDecoration(
-                                labelText: "price",
-                              ),
-                            ),
-                            TextFormField(
-                              controller: controller.receiptController,
-                              decoration: const InputDecoration(
-                                labelText: "receipt no",
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                controller.chooseDate(context);
-                              },
-                              child: const Text("Choose Date"),
-                            ),
-                            Obx(
-                              () => Switch(
-                                  value: controller.onChangetype.value,
-                                  onChanged: (value) {
-                                    controller.onSwitch(value);
-                                  }),
-                            ),
-                          ],
+    );
+  }
+
+  adding(
+    BuildContext context,
+  ) {
+    final controller = Get.find<CalculatorController>();
+    // String? selectedDate = '';
+
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Adding Data"),
+            content: SizedBox(
+              height: getHeight(context, 35),
+              // width: Get.width.toPrecision(90),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      validator: (String? value) {
+                        return value == "" ? "required" : null;
+                      },
+                      controller: controller.priceController,
+                      decoration: const InputDecoration(
+                        labelText: "price",
+                      ),
+                    ),
+                    TextFormField(
+                      validator: (String? value) {
+                        return value == "" ? "required" : null;
+                      },
+                      controller: controller.receiptController,
+                      decoration: const InputDecoration(
+                        labelText: "receipt no",
+                      ),
+                    ),
+                    Row(children: [
+                      TextButton(
+                        onPressed: () {
+                          controller.chooseDate(context);
+                        },
+                        child: const Text("Choose Date"),
+                      ),
+                      FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Obx(
+                          (() => SmallText(
+                                text: controller
+                                        .selectedDateTimeStringController
+                                        .isEmpty
+                                    ? "not selected date"
+                                    : controller
+                                        .selectedDateTimeStringController.value
+                                        .toString(),
+                                color: Colors.redAccent,
+                                size: Dimensions.height10,
+                              )),
                         ),
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            controller.addTemp(
-                              price: int.tryParse(
-                                  controller.priceController.value.text),
-                              receipt: int.tryParse(
-                                  controller.receiptController.value.text),
-                              selectdate: DateTime.tryParse(
-                                  controller.dateController.value.text),
-                              type:
-                                  controller.typeController.value.text == "true"
-                                      ? true
-                                      : false,
-                            );
-                            controller.sumTotalLoan(controller.tmp);
-                            controller.sumTotalPayBack(controller.tmp);
-                            controller.finalTotalPricesLoan();
-                          },
-                          child: const Text("OK"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Close"),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ),
-    );
+                    ]),
+                    Obx(
+                      () => Switch(
+                          value: controller.onChangetype.value,
+                          onChanged: (value) {
+                            controller.onSwitch(value);
+                          }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Processing Data')));
+                  } else {
+                    return;
+                  }
+                  controller.addTemp(
+                    price: int.tryParse(controller.priceController.value.text),
+                    receipt:
+                        int.tryParse(controller.receiptController.value.text),
+                    selectdate:
+                        DateTime.tryParse(controller.dateController.value.text),
+                    type: controller.typeController.value.text == "true"
+                        ? true
+                        : false,
+                  );
+
+                  controller.commonSum();
+                  controller.resetTempValues();
+                  Navigator.of(context).pop();
+                },
+                child: const Text("OK"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Close"),
+              ),
+            ],
+          );
+        });
   }
 
   Expanded middleTitle({String textTitle = "MeddleTitle"}) {
@@ -424,5 +443,13 @@ class HomePage extends StatelessWidget {
           "appBarTitle ",
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              adding(Get.context!);
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
       );
 }
