@@ -128,6 +128,7 @@ class HomePage extends StatelessWidget {
                                     TextButton(
                                       onPressed: () {
                                         controller.removeAtIndex(index: index);
+                                        controller.commonSum();
 
                                         Navigator.of(context).pop();
                                       },
@@ -196,7 +197,8 @@ class HomePage extends StatelessWidget {
                                   // color: bCol,
                                   child: Text(
                                     controller.nFormatter(
-                                        number: controller.tmp[index]["price"]),
+                                        number: int.tryParse(
+                                            controller.tmp[index]["price"])),
                                     style: contentstyle,
                                   ),
                                 ),
@@ -233,7 +235,8 @@ class HomePage extends StatelessWidget {
                                   alignment: Alignment.center,
                                   child: Text(
                                     formatter
-                                        .format(controller.tmp[index]["date"]
+                                        .format(DateTime.tryParse(
+                                                controller.tmp[index]["date"])
                                             as DateTime)
                                         .toString(),
                                     style: contentstyle,
@@ -379,6 +382,8 @@ class HomePage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
+                  controller.setList();
+                  controller.getList();
                   Navigator.of(context).pop();
                 },
                 child: const Text("Close"),
@@ -409,6 +414,7 @@ class HomePage extends StatelessWidget {
       onTap: () {
         // print(function.runtimeType);
         function != null ? function() : null;
+
         // print("$textcontent");
       },
       child: SizedBox(

@@ -1,11 +1,14 @@
 // import 'dart:js';
 // import 'dart:math';
 
+import 'dart:convert';
+
 import 'package:czcalculator/constant/const.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CalculatorController extends GetxController {
   // total prices of loan
@@ -22,6 +25,10 @@ class CalculatorController extends GetxController {
   // just list of every reciept
   final RxList<Map<String, dynamic>> _tmp = RxList<Map<String, dynamic>>();
   RxList<Map<String, dynamic>> get tmp => _tmp;
+  // just list of every reciept
+  final RxList<Map<String, dynamic>> _tmp2 = RxList<Map<String, dynamic>>();
+  RxList<Map<String, dynamic>> get tmp2 => _tmp2;
+
   //
   final TextEditingController _priceController = TextEditingController();
   TextEditingController get priceController => _priceController;
@@ -45,6 +52,9 @@ class CalculatorController extends GetxController {
       _selectedDateTimeStringController;
   final RxString _selectedDateTimeStringController = ''.obs;
   var selectedDate = DateTime.now().obs;
+  // shared prefrence initial
+  final prefs = SharedPreferences.getInstance();
+  final String _saveWords = "SaveAccounts";
 
   //
   RxInt _id = 20.obs;
@@ -54,17 +64,19 @@ class CalculatorController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    initList();
-    sumTotalLoan(tmp);
-    sumTotalPayBack(tmp);
-    finalTotalPricesLoan();
+    // initList();
+    getList();
+    // sumTotalLoan(tmp);
+    // sumTotalPayBack(tmp);
+    // finalTotalPricesLoan();
+
     update();
   }
 
-  void initList() {
-    _tmp.addAll(calModel);
-    update();
-  }
+  // void initList() {
+  //   _tmp.addAll(calModel);
+  //   update();
+  // }
 
   void finalTotalPricesLoan() {
     _finalTotalPriceLoan = 0;
@@ -78,9 +90,10 @@ class CalculatorController extends GetxController {
   }
 
   void commonSum() {
-    finalTotalPricesLoan();
     sumTotalLoan(_tmp);
     sumTotalPayBack(_tmp);
+    finalTotalPricesLoan();
+    update();
   }
 
   void sumTotalLoan(List<Map<String, dynamic>> total) {
@@ -89,7 +102,7 @@ class CalculatorController extends GetxController {
 
     for (final i in total) {
       if (i["type"] == "false") {
-        tempTotalPrices.add(i["price"]);
+        tempTotalPrices.add(int.parse(i["price"]));
       }
     }
 
@@ -98,6 +111,28 @@ class CalculatorController extends GetxController {
     }
 
     update();
+  }
+
+  Future<void> setList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String> jsonList = _tmp.map((item) => jsonEncode(item)).toList();
+    prefs.setStringList(_saveWords, jsonList);
+  }
+
+  Future<void> getList() async {
+    var _tmp1;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String>? jsonList = prefs.getStringList(_saveWords);
+    _tmp1 = jsonList!.map((item) => jsonDecode(item)).toList();
+
+// this line for save list<Map<String,dynamic>> hashmaplink to without hashmaplink
+    _tmp.value = List<Map<String, dynamic>>.from(_tmp1);
+
+    print(_tmp.value);
+    print(_tmp.length);
+    commonSum();
+    update();
+    // return _tmp1;
   }
 
   void onSwitch(bool value) {
@@ -111,7 +146,7 @@ class CalculatorController extends GetxController {
 
     for (final i in total) {
       if (i["type"] == "true") {
-        tempTotalPrices.add(i["price"]);
+        tempTotalPrices.add(int.parse(i["price"]));
       }
     }
 
@@ -124,6 +159,9 @@ class CalculatorController extends GetxController {
 
   void removeAtIndex({int? index}) {
     index != null ? tmp.removeAt(index) : null;
+    commonSum();
+    setList();
+    getList();
 
     update();
   }
@@ -142,14 +180,6 @@ class CalculatorController extends GetxController {
 
   int tt = 0;
   void addTemp({int? price, int? receipt, DateTime? selectdate, bool? type}) {
-    // bool boolRandom = false;
-    // tt++;
-    // if (tt % 5 == 0) {
-    //   boolRandom = true;
-    // } else {
-    //   boolRandom = false;
-    // }
-
     Map<String, dynamic> t = {};
 
     if (price != null &&
@@ -158,22 +188,17 @@ class CalculatorController extends GetxController {
         type != null) {
       t = {
         "id": "${_id++}",
-        "price": price,
-        "receipt": receipt,
-        "date": selectdate,
+        "price": "$price",
+        "receipt": "$receipt",
+        "date": "$selectdate",
         "type": "$onChangetype",
       };
-    } else {
-      // t = {
-      //   "id": "${_id++}",
-      //   "price": random.nextInt(10000000) + 1000,
-      //   "receipt": random.nextInt(2000),
-      //   "date": DateTime.now(),
-      //   "type": boolRandom,
-      // };
-    }
+    } else {}
 
     _tmp.add(t);
+    setList();
+    getList();
+    commonSum();
     update();
   }
 
