@@ -1,6 +1,6 @@
 
 # czCalculater
-just for simple calculator and table and offline storage for my_father and sqlite or sharedprefrence
+just for simple calculator and table and offline storage for simple accounting and sqlite or sharedprefrence
 
 ## Getting Started
 
