@@ -3,7 +3,7 @@
 
 import 'dart:convert';
 
-import 'package:czcalculator/constant/const.dart';
+// import 'package:czcalculator/constant/const.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -128,8 +128,8 @@ class CalculatorController extends GetxController {
 // this line for save list<Map<String,dynamic>> hashmaplink to without hashmaplink
     _tmp.value = List<Map<String, dynamic>>.from(_tmp1);
 
-    print(_tmp.value);
-    print(_tmp.length);
+    // print(_tmp.value);
+    // print(_tmp.length);
     commonSum();
     update();
     // return _tmp1;
